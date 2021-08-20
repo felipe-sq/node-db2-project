@@ -1,10 +1,10 @@
-const { getById } = require("./cars-model");
+const Cars = require("./cars-model.js");
 const vinValidator = require('vin-validator');
 const db = require('../../data/db-config.js');
 
 const checkCarId = async (req, res, next) => {
   try {
-    const car = await getById(req.params.id)
+    const car = await Cars.getById(req.params.id)
     if (car) {
       req.car = car;
       next();
@@ -14,7 +14,7 @@ const checkCarId = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 
 const checkCarPayload = (req, res, next) => {
   if (!req.body.vin) {
@@ -28,7 +28,7 @@ const checkCarPayload = (req, res, next) => {
   } else {
     next();
   }
-}
+};
 
 const checkVinNumberValid = (req, res, next) => {
   const isValidVin = vinValidator.validate(req.body.vin);
@@ -40,7 +40,7 @@ const checkVinNumberValid = (req, res, next) => {
   } else {
     next();
   }
-}
+};
 
 const checkVinNumberUnique = async (req, res, next) => {
   try {
@@ -53,7 +53,7 @@ const checkVinNumberUnique = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 
 module.exports = {
   checkCarId,

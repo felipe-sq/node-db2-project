@@ -6,8 +6,8 @@ const server = express();
 
 server.use('/api/cars', CarRouter);
 
-server.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+// server.get('/', (req, res) => {
+//     res.send('Hello World!');
+// });
 
 module.exports = server;
