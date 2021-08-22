@@ -23,10 +23,17 @@ router.get('/:id', checkCarId, async (req, res, next) => {
 
 router.post('/', checkVinNumberValid, checkVinNumberUnique, checkCarPayload, 
 async (req, res, next) => {
+  const car = await Cars.create(req.body);
+
   try {
-    const car = await Cars.create(req.body);
+    if (car) {
+
+    // const car = await Cars.create(req.body);
     console.log(car);
     res.status(201).json(car);
+    } else {
+      res.status(500).json({message: 'Could not create car'});
+    }
   } catch (err) {
     next(err);
   }
