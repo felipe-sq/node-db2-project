@@ -9,7 +9,7 @@ async function getById(id) {
 }
 
 async function create({vin, make, model, mileage, title, transmission}) {
-  const {id} = await db('cars').insert({vin, make, model, mileage, title, transmission});
+  const [id] = await db('cars').insert({vin, make, model, mileage, title, transmission});
   return getById(id);
 }
 
