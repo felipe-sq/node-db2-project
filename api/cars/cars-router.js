@@ -14,20 +14,21 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', checkCarId, async (req, res, next) => {
   try {
-    const car = await Cars.getById(req.params.id);
-    res.status(200).json(car);
+    // const car = await Cars.getById(req.params.id);
+    res.status(200).json(req.car);
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/', checkCarPayload, checkVinNumberValid, checkVinNumberUnique,
-async (req, res, next) => {
-  // const car = await Cars.create(req.body);
+router.post(
+  '/', 
+  checkCarPayload, 
+  checkVinNumberValid, 
+  checkVinNumberUnique,
+  async (req, res, next) => {
 
   try {
-    // if (car) {
-
     const car = await Cars.create(req.body);
     if (car) {
     console.log(car);

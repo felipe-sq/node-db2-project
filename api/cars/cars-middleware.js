@@ -1,6 +1,6 @@
 const Cars = require("./cars-model.js");
-// const vinValidator = require('vin-validator');
-const db = require('../../data/db-config.js');
+const vinValidator = require('vin-validator');
+// const db = require('../../data/db-config.js');
 
 const checkCarId = async (req, res, next) => {
   try {
@@ -19,7 +19,6 @@ const checkCarId = async (req, res, next) => {
 const checkCarPayload = (req, res, next) => {
   if (!req.body.vin) {
     return res.status(400).json({message: `vin is missing`});
-    // next();
   } else if (!req.body.make) {
     return res.status(400).json({message: `make is missing`});
   } else if (!req.body.model) {
@@ -32,29 +31,34 @@ const checkCarPayload = (req, res, next) => {
 };
 
 const checkVinNumberValid = (req, res, next) => {
-  // const isValidVin = vinValidator.validate(req.params.vin);
-  // unable to use vinValidator.validate() because it does not recognize req.params.vin; error message is: cannot read property 'toLowerCase' of undefined
+  //updated code based on solution video. modified to check for valid vin number correctly
+  
   try {
-    if (!req.body.vin) {
-    // if (!isValidVin) {
-      return res.status(400).json({message: `vin ${req.body.vin} is invalid`});
-    } else {
+    if (vinValidator.validate(req.body.vin)) {
       next();
+    } else {
+      next({
+        status: 400,
+        message: `vin ${req.body.vin} is invalid`,
+      });
     }
   } catch (err) {
     next(err);
   }
+
 };
 
 const checkVinNumberUnique = async (req, res, next) => {
   try {
-    const existingVins = await db('cars').where('vin', req.body.vin).first();
+    const existingVins = await Cars.getByVin(req.body.vin);
 
-    if (existingVins) {
-    // if (!req.body.vin) {
-      return res.status(400).json({message: `vin ${req.body.vin} already exists`});
-    } else {
+    if (!existingVins) {
       next();
+    } else {
+      next({
+        status: 400, 
+        message: `vin ${req.body.vin} already exists`,
+      });
     }
   } catch (err) {
     next(err);

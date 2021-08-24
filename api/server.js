@@ -9,4 +9,10 @@ server.use(morgan("dev"));
 
 server.use('/api/cars', CarRouter);
 
+server.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    message: err.message
+  });
+});
+
 module.exports = server;
